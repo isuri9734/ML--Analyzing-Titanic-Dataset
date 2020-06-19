@@ -30,6 +30,7 @@ train_data["Age"] = train_data["Age"].fillna(value=train_data["Age"].mean())
 # print(train_data.info())
 
 test_data["Age"] = test_data["Age"].fillna(value=test_data["Age"].mean())
+# print(train_data.info())
 
 p_survive = train_data[train_data["Survived"] == 1]
 p_notsuvive = train_data[train_data["Survived"] == 0]
@@ -39,17 +40,11 @@ p_notsuvive = train_data[train_data["Survived"] == 0]
 # plt.legend(['Passenger Survived','Passenger Died'])
 # plt.show()
 
-# gap = [0,5,10,15,20,40,60,120]
-# train_data["age_cat"] = pd.cut(train_data["Age"], gap,labels=["Baby","Kids","Child","Teenager","Adult","M_adult","Aged"])
-# test_data["age_cat"] = pd.cut(test_data["Age"], gap,labels=["Baby","Kids","Child","Teenager","Adult","M_adult","Aged"])
+train_data=train_data.fillna(train_data.mean())
+test_data=test_data.fillna(test_data.mean())
 
-# new_graph = train_data.pivot_table(index="age_cat",values='Survived')
-
-# # new_graph.plot.bar()
-# # plt.show()
-
-train_data = train_data.dropna()
-test_data = test_data.dropna()
+# train_data = train_data.dropna()
+# test_data = test_data.dropna()
 
 train_data = train_data.drop([ 'Embarked', 'PassengerId',
                         'Name', 'SibSp', 'Parch', 'Cabin'], axis=1)
@@ -66,7 +61,7 @@ test_data["Sex"] = test_data["Sex"] == 'male'
 target_value = train_data['Survived'].values
 # print(target_value)
 
-f_array = train_data[['Pclass', 'Sex', 'Age','Fare']].values
+f_array = train_data[['Pclass', 'Sex', 'Age','Fare']].values   
 # print(f_array)
 
 fe_array = test_data[['Pclass', 'Sex', 'Age','Fare']].values
@@ -85,11 +80,10 @@ predict_value = model.predict(test_x)
 
 # print(target_value[:5])
 
-# accuracy1 = accuracy_score(test_y, predict_value)
+accuracy1 = accuracy_score(test_y, predict_value)
 # print(accuracy1)
 
-predict_value2 = cross_val_score(model, X, y, cv=10)
-predict_value2.sort()
+predict_value2 = cross_val_score(model, X, y, cv=5)
 # print(predict_value2)
 
 accuracy2 = predict_value2.mean()
@@ -98,9 +92,6 @@ accuracy2 = predict_value2.mean()
 model.fit(X,y)
 test_predict_value = model.predict(fe_array)
 
-# print(test_prediction_value[:5])
+print(test_predict_value[:5])
 
-# print(target_value[:5])
-
-accuracy3 = test_predict_value.mean()
-print(accuracy3)
+print(target_value[:5])

@@ -63,3 +63,15 @@ test_prediction = model.predict(test_f_array)
 
 print (accuracy_score(target_value,test_prediction))
 
+accuracy3 = test_predict_value.mean()
+print(accuracy3)
+
+holdout_ids = test_data["PassengerId"]
+submission_df = {"PassengerId": holdout_ids,
+                 "Survived": test_predict_value}
+
+submission = pd.DataFrame(submission_df)
+
+submission.to_csv("submission.csv",index=False)
+sub = pd.read_csv('../ML--Analyzing-Titanic-Dataset/submission.csv')
+print(sub.info())
