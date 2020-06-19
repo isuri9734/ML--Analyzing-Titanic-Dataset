@@ -5,6 +5,7 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import cross_val_score
+import pickle
 
 train_data = pd.read_csv('../ML--Analyzing-Titanic-Dataset/train.csv')
 # print(train_data.head(10))
@@ -26,11 +27,11 @@ graph2 = train_data.pivot_table(index="Pclass",values="Survived")
 # graph2.plot.bar()
 # plt.show()
 
-train_data["Age"] = train_data["Age"].fillna(value=train_data["Age"].mean())
-# print(train_data.info())
+# train_data["Age"] = train_data["Age"].fillna(value=train_data["Age"].mean())
+# # print(train_data.info())
 
-test_data["Age"] = test_data["Age"].fillna(value=test_data["Age"].mean())
-# print(train_data.info())
+# test_data["Age"] = test_data["Age"].fillna(value=test_data["Age"].mean())
+# # print(train_data.info())
 
 p_survive = train_data[train_data["Survived"] == 1]
 p_notsuvive = train_data[train_data["Survived"] == 0]
@@ -73,25 +74,22 @@ y = target_value
 
 train_X, test_x, train_y, test_y = train_test_split(X,y, test_size=0.20,random_state=0)
 
-model.fit(train_X, train_y)
+model1 = model.fit(train_X, train_y)
 
-predict_value = model.predict(test_x)
-# print(predict_value[:5])
+model2 = model.fit(X,y)
 
-# print(target_value[:5])
+# model_train_file = "train_data.pkl"
+# model_test_file = "test_data.pkl"
 
-accuracy1 = accuracy_score(test_y, predict_value)
-# print(accuracy1)
+# with open(model_file, 'wb') as file:
+#     pickle.dump(model1, file)
 
-predict_value2 = cross_val_score(model, X, y, cv=5)
-# print(predict_value2)
+tuple_model1 = (model1, train_X, train_y, test_x, test_y)
 
-accuracy2 = predict_value2.mean()
-# print(accuracy2)
+tuple_model2 = ( model2, X, y, target_value, fe_array)
 
-model.fit(X,y)
-test_predict_value = model.predict(fe_array)
 
-print(test_predict_value[:5])
+pickle.dump(tuple_model1, open("train_data.pkl", 'wb'))
 
-print(target_value[:5])
+pickle.dump(tuple_model2, open("test_data.pkl", 'wb'))
+
