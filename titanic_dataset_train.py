@@ -6,6 +6,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import cross_val_score
 import pickle
+from sklearn.ensemble import RandomForestClassifier
 
 train_data = pd.read_csv('../ML--Analyzing-Titanic-Dataset/train.csv')
 # print(train_data.head(10))
@@ -27,12 +28,6 @@ graph2 = train_data.pivot_table(index="Pclass",values="Survived")
 # graph2.plot.bar()
 # plt.show()
 
-# train_data["Age"] = train_data["Age"].fillna(value=train_data["Age"].mean())
-# # print(train_data.info())
-
-# test_data["Age"] = test_data["Age"].fillna(value=test_data["Age"].mean())
-# # print(train_data.info())
-
 p_survive = train_data[train_data["Survived"] == 1]
 p_notsuvive = train_data[train_data["Survived"] == 0]
 # p_survive["Age"].plot.hist(alpha=0.5,color='red',bins=50)
@@ -41,23 +36,27 @@ p_notsuvive = train_data[train_data["Survived"] == 0]
 # plt.legend(['Passenger Survived','Passenger Died'])
 # plt.show()
 
-train_data=train_data.fillna(train_data.mean())
-test_data=test_data.fillna(test_data.mean())
-
-# train_data = train_data.dropna()
-# test_data = test_data.dropna()
+# train_data=train_data.fillna(train_data.mean())
 
 train_data = train_data.drop([ 'Embarked', 'PassengerId',
-                        'Name', 'SibSp', 'Parch', 'Cabin'], axis=1)
+                        'Name', 'SibSp', 'Parch', 'Cabin', 'Ticket'], axis=1)
 
-train_data['Age'] = train_data['Age'].astype(np.int64)
+test_data=test_data.fillna(test_data.mean())
 
-test_data['Age'] = test_data['Age'].astype(np.int64)
+# train_data["Age"] = train_data["Age"].fillna(value=train_data["Age"].mean())
+# test_data["Age"] = test_data["Age"].fillna(value=test_data["Age"].mean())
+# train_data['Age'] = train_data['Age'].astype(np.int64)
+# test_data['Age'] = test_data['Age'].astype(np.int64)
+# train_data["Sex"] = train_data["Sex"] == 'male'
+# test_data["Sex"] = test_data["Sex"] == 'male'
 
-train_data["Sex"] = train_data["Sex"] == 'male'
-test_data["Sex"] = test_data["Sex"] == 'male'
+data = [train_data, test_data]
 
-# print(train_data.head(10))
+for full_data in data:
+    full_data['Age'] = full_data['Age'].fillna(value=train_data["Age"].mean())
+    full_data['Age'] = full_data['Age'].astype(np.int64)
+    full_data['Sex'] = full_data['Sex'] == 'male'
+
 
 target_value = train_data['Survived'].values
 # print(target_value)
@@ -78,18 +77,14 @@ model1 = model.fit(train_X, train_y)
 
 model2 = model.fit(X,y)
 
-# model_train_file = "train_data.pkl"
-# model_test_file = "test_data.pkl"
+random_forest = RandomForestClassifier(n_estimators=100)
+model3 = random_forest.fit(train_X, train_y)
 
-# with open(model_file, 'wb') as file:
-#     pickle.dump(model1, file)
+model_train_file = "train_data.pkl"
 
-tuple_model1 = (model1, train_X, train_y, test_x, test_y)
+tuple_model1 = (model1, model3, train_X, train_y, test_x, test_y,model2, X, y, target_value, fe_array)
 
-tuple_model2 = ( model2, X, y, target_value, fe_array)
+with open(model_train_file, 'wb') as file:
+    pickle.dump(tuple_model1, file)
 
-
-pickle.dump(tuple_model1, open("train_data.pkl", 'wb'))
-
-pickle.dump(tuple_model2, open("test_data.pkl", 'wb'))
-
+# pickle.dump(tuple_model1, open("train_data.pkl", 'wb'))
