@@ -36,11 +36,10 @@ p_notsuvive = train_data[train_data["Survived"] == 0]
 # plt.legend(['Passenger Survived','Passenger Died'])
 # plt.show()
 
-# train_data=train_data.fillna(train_data.mean())
-
 train_data = train_data.drop([ 'Embarked', 'PassengerId',
                         'Name', 'SibSp', 'Parch', 'Cabin', 'Ticket'], axis=1)
 
+# train_data=train_data.fillna(train_data.mean())
 test_data=test_data.fillna(test_data.mean())
 
 # train_data["Age"] = train_data["Age"].fillna(value=train_data["Age"].mean())
@@ -66,25 +65,21 @@ f_array = train_data[['Pclass', 'Sex', 'Age','Fare']].values
 
 fe_array = test_data[['Pclass', 'Sex', 'Age','Fare']].values
 
+train_X, test_x, train_y, test_y = train_test_split(f_array,target_value, test_size=0.20,random_state=0)
+
 model = LogisticRegression()
 
-X = f_array
-y = target_value
-
-train_X, test_x, train_y, test_y = train_test_split(X,y, test_size=0.20,random_state=0)
-
-model1 = model.fit(train_X, train_y)
-
-model2 = model.fit(X,y)
+model.fit(train_X, train_y)
 
 random_forest = RandomForestClassifier(n_estimators=100)
-model3 = random_forest.fit(train_X, train_y)
+
+random_forest.fit(train_X, train_y)
 
 model_train_file = "train_data.pkl"
 
-tuple_model1 = (model1, model3, train_X, train_y, test_x, test_y,model2, X, y, target_value, fe_array)
+tuple_data = (model, random_forest, train_X, train_y, test_x, test_y, f_array, target_value, fe_array)
 
 with open(model_train_file, 'wb') as file:
-    pickle.dump(tuple_model1, file)
+    pickle.dump(tuple_data, file)
 
-# pickle.dump(tuple_model1, open("train_data.pkl", 'wb'))
+# pickle.dump(tuple_data, open("train_data.pkl", 'wb'))
