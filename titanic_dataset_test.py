@@ -5,7 +5,7 @@ from sklearn.model_selection import cross_val_score
 model_train_file = "train_data.pkl"
 
 with open(model_train_file, 'rb') as file:
-    pickled_model, random_forest_model, pickled_Xtrain, pickled_Ytrain, pickled_Xtest, pickled_Ytest, farray, target_val, fearray = pickle.load(file)
+    pickled_model, random_forest_model, pickled_Xtest, pickled_Ytest, farray, target_val, fearray = pickle.load(file)
 
 # pickled_model, random_forest_model, pickled_Xtrain, pickled_Ytrain, pickled_Xtest, pickled_Ytest, pickled_model2,allx, ally, target_val, fearray = pickle.load(open("train_data.pkl", 'rb'))
 
@@ -34,5 +34,5 @@ r_forest_predict2 = cross_val_score(random_forest_model, farray, target_val, cv=
 accuracy_rf2 = r_forest_predict2.mean()
 # print(accuracy_rf2)
 test_predict_value2 = random_forest_model.predict(fearray)
-# print(test_predict_value2[:5])
-# print(target_val[:5])
+print(test_predict_value2[:5])
+print(target_val[:5])

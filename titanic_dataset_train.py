@@ -77,7 +77,7 @@ random_forest.fit(train_X, train_y)
 
 model_train_file = "train_data.pkl"
 
-tuple_data = (model, random_forest, train_X, train_y, test_x, test_y, f_array, target_value, fe_array)
+tuple_data = (model, random_forest, test_x, test_y, f_array, target_value, fe_array)
 
 with open(model_train_file, 'wb') as file:
     pickle.dump(tuple_data, file)
